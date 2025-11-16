@@ -52,11 +52,15 @@ def search():
         results=results
     )
 
+# --- NEW: 404 Error Handler ---
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
 
 # --- Application Startpoint ---
 if __name__ == '__main__':
     # Parse command-line arguments (e.g., --regenerate)
-    parser = argparse.ArgumentParser(description="Music Mood Web App")
+    parser = argparse.ArgumentParser(description="Music Mood Classifier Web App")
     parser.add_argument(
         '--regenerate',
         action='store_true',

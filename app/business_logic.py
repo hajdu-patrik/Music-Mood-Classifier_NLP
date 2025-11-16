@@ -23,7 +23,7 @@ from scipy.sparse import save_npz, load_npz
 
 
 # To start the program:
-# 1. Step: Create a .venv virtual enviroment with this command: "/c/Users/XXX/AppData/Local/Programs/Python/Python311/python.exe -m venv .venv"
+# 1. Step: Create a .venv virtual enviroment with this command: "python -m venv .venv"
 # 2. Step: Run .venv (python's virtual enviroment) with this command: "source .venv/Scripts/activate"
 # 3. Step: Download the packages that the program uses with this command: "pip install -r imports/requirements.txt"
 # 4. Step: Run main.py file with this command: "python app/app.py"

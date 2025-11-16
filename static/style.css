@@ -143,3 +143,17 @@ h1, h2 {
     border-radius: 4px;
     transition: background 0.3s, border-color 0.3s;
 }
+
+/* --- 404 Page Specific Styles --- */
+.error-title {
+    font-size: 8rem; /* 8x the base font size */
+    font-weight: bold;
+    color: var(--button-bg); /* Use the theme's accent color */
+    text-align: center;
+    margin: 0.2em 0;
+}
+
+/* Utility class for centering text */
+.text-center {
+    text-align: center;
+}

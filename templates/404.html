@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <button id="theme-toggle" class="theme-toggle">💡</button>
+
+    <div class="container text-center">
+        
+        <h1 class="error-title">404</h1>
+        
+        <h2>Page Not Found (ERROR)</h2>
+        
+        <p>Redirecting to homepage in <span id="countdown">5</span> seconds...</p>
+        
+        <a href="/" class="back-link">&laquo; Back to homepage</a>
+    </div>
+
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+</body>
+</html>
