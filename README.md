@@ -57,6 +57,7 @@ Music-Mood-Classifier/
 ├── static/
 │ ├── style.css
 │ └── scripts.js
+│ └── favicon.ico
 │
 └── templates/
 ├── index.html
