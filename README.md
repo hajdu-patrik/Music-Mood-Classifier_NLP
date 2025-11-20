@@ -1,4 +1,4 @@
-# 🎵 Music Mood Classifier
+# Music Mood Classifier
 
 [![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![Framework](https://img.shields.io/badge/Framework-Flask-black.svg)](https://flask.palletsprojects.com/)
