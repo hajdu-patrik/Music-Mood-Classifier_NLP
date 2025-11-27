@@ -50,11 +50,11 @@ Music-Mood-Classifier/
 │ ├── business_logic.py # Core NLP/ML logic
 │ └── app.py # Flask server
 │
-├── sources/
+├── source/
 │ ├── spotify_millsongdata.csv
 │ └── emotions.csv
 │
-├── imports/
+├── import/
 │ └── requirements.txt
 │
 ├── model/
@@ -65,7 +65,7 @@ Music-Mood-Classifier/
 │ └── scripts.js
 │ └── favicon.ico
 │
-└── templates/
+└── template/
 ├── index.html
 └── results.html
 ```
