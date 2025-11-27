@@ -1,8 +1,18 @@
 # Music Mood Classifier
 
-[![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
-[![Framework](https://img.shields.io/badge/Framework-Flask-black.svg)](https://flask.palletsprojects.com/)
-[![Libraries](https://img.shields.io/badge/Libraries-sklearn%20%7C%20pandas%20%7C%20nltk-orange.svg)](https://scikit-learn.org/)
+![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat&logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Framework-Flask-000000?style=flat&logo=flask&logoColor=white)
+
+![Scikit-Learn](https://img.shields.io/badge/ML-scikit--learn-F7931E?style=flat&logo=scikit-learn&logoColor=white)
+![Pandas](https://img.shields.io/badge/Data-Pandas-150458?style=flat&logo=pandas&logoColor=white)
+![NLTK](https://img.shields.io/badge/NLP-NLTK-2E8B57?style=flat&logo=python&logoColor=white)
+![NumPy](https://img.shields.io/badge/Math-NumPy-013243?style=flat&logo=numpy&logoColor=white)
+
+![HTML5](https://img.shields.io/badge/Frontend-HTML5-E34F26?style=flat&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/Style-CSS3-1572B6?style=flat&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/Script-JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
+
+![Status](https://img.shields.io/badge/Status-Educational_Project-brightgreen?style=flat)
 
 A Python-based NLP system and web application that analyzes the emotional profile of song lyrics and recommends songs with a similar mood. The project was developed as part of the **BME-VIK "Natural Language and Semantic Technologies"** course.
 
