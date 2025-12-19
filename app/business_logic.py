@@ -210,28 +210,24 @@ def load_artifacts():
         return None
 
 def regenerate_artifacts():
-    print("--- Starting Model Regeneration ---")
+    print("WARNING: Artifacts not found! Attempting regeneration...")
+    
+    if not os.access(MODEL_DIR, os.W_OK):
+        print("ERROR: Read-only file system detected. Cannot retrain model on server.")
+        return None
+
+    print("--- Starting Model Regeneration (Local Environment) ---")
     lyrics_df_raw, emotions_df = load_data()
     if lyrics_df_raw is None: return None
     
     emotion_model, _ = train_emotion_model(emotions_df)
     
-    try:
-        joblib.dump(emotion_model, EMOTION_MODEL_PATH)
-        lyrics_df = analyze_lyrics_database(lyrics_df_raw, emotion_model)
-        lyrics_df.to_pickle(LYRICS_DF_PATH)
-        tfidf_matrix, tfidf_vectorizer = create_similarity_matrix(lyrics_df)
-        save_npz(LYRICS_MATRIX_PATH, tfidf_matrix)
-        joblib.dump(tfidf_vectorizer, LYRICS_VECTORIZER_PATH)
-    except OSError:
-        print("WARNING: Could not save models (Read-only file system). Using in-memory models only.")
-
-        return {
-            "emotion_model": emotion_model,
-            "lyrics_df": lyrics_df,
-            "tfidf_matrix": tfidf_matrix,
-            "tfidf_vectorizer": tfidf_vectorizer
-        }
+    joblib.dump(emotion_model, EMOTION_MODEL_PATH)
+    lyrics_df = analyze_lyrics_database(lyrics_df_raw, emotion_model)
+    lyrics_df.to_pickle(LYRICS_DF_PATH)
+    tfidf_matrix, tfidf_vectorizer = create_similarity_matrix(lyrics_df)
+    save_npz(LYRICS_MATRIX_PATH, tfidf_matrix)
+    joblib.dump(tfidf_vectorizer, LYRICS_VECTORIZER_PATH)
 
     return {
         "emotion_model": emotion_model,
