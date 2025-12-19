@@ -19,7 +19,14 @@ The system consists of two main components:
 
 ---
 
-## 🚀 Features
+## 🚀 Live Demo
+
+**Check out the live version of the application here:**
+👉 **[https://music-mood-classifier-nine.vercel.app](https://music-mood-classifier-nine.vercel.app)**
+
+---
+
+## 📚 Features
 
 - 🎭 **Emotion Classification** – 6 categories: *sadness, joy, love, anger, fear, surprise*
 - 🎶 **Similarity-Based Recommendation** – based on TF-IDF + Cosine Similarity
@@ -54,8 +61,7 @@ Music-Mood-Classifier/
 │ ├── spotify_millsongdata.csv
 │ └── emotions.csv
 │
-├── import/
-│ └── requirements.txt
+├── requirements.txt
 │
 ├── model/
 │ └── (Generated artifacts)
@@ -170,3 +176,14 @@ Enter artist name: exit
 ## 📊 Model Performance
 
 The emotion classification model (Logistic Regression on TF-IDF features) achieved a **90% weighted average F1-score** on the validation set (83,362 samples).
+
+---
+
+## 📦 Deployment
+
+This project is configured for automated deployment via **Vercel**.
+Any push to the `main` branch automatically triggers a new build and deployment.
+
+| Environment | Status |
+| :--- | :--- |
+| **Production** | [![Vercel App](https://img.shields.io/badge/Visit-Live_App-success?style=for-the-badge&logo=vercel)](https://music-mood-classifier-nine.vercel.app) |
