@@ -37,18 +37,11 @@ def get_recommendations(artist, song, lyrics_data, tfidf_matrix, top_n=5):
         target_emotion_label = song_entry['emotion_label']
         target_emotion_name = song_entry['emotion_name']
         
-        # 3. Similarity calculation (without Scikit-learn)
-        # Mathematics: Cosine Similarity = (A . B) / (|A|*|B|)
-        # Since our TF-IDF matrix is already normalized (L2 norm), simple multiplication (Dot Product) is sufficient.
-        # Extract the vector of the target song (this is a sparse vector)
+        # 3. Similarity calculation (without Scikit-learn, native matrix multiplication)
         song_vector = tfidf_matrix[target_index]
         
-        # Matrix multiplication: The entire matrix multiplied by the transpose of the song vector
-        # Result: A column vector containing similarity scores for all songs
-        # The .dot() is a built-in fast function of the scipy sparse matrix
+        # Dot product calculation (fast scipy operation)
         dot_product = tfidf_matrix.dot(song_vector.T)
-        
-        # Conversion to dense array and flattening to 1D
         sim_scores = dot_product.toarray().flatten()
         
         # 4. Filtering and sorting
@@ -120,6 +113,3 @@ def main_cli():
         print("System loaded. Ready.")
     else:
         print("Failed to load system.")
-
-if __name__ == "__main__":
-    main_cli()
