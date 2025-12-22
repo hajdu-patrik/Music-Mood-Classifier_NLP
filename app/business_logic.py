@@ -2,36 +2,22 @@ import numpy as np
 import time
 import re
 import os
-import joblib
 import json
 import gzip
-import argparse
-from scipy.sparse import save_npz, load_npz
-from sklearn.metrics.pairwise import cosine_similarity
+from scipy.sparse import load_npz
 
 # Paths
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.abspath(os.path.join(BASE_DIR, '..'))
 MODEL_DIR = os.path.join(PROJECT_ROOT, 'model')
 
-# New data paths
+# Data files
 LYRICS_METADATA_PATH = os.path.join(MODEL_DIR, 'lyrics_metadata.json.gz')
 LYRICS_MATRIX_PATH = os.path.join(MODEL_DIR, 'lyrics_tfidf_matrix.npz')
-EMOTION_MODEL_PATH = os.path.join(MODEL_DIR, 'emotion_pipeline.joblib')
-LYRICS_VECTORIZER_PATH = os.path.join(MODEL_DIR, 'lyrics_vectorizer.joblib')
-
-def preprocess_text(text):
-    # Simple regex-based tokenization without NLTK
-    if not isinstance(text, str):
-        return ""
-    text = text.lower()
-    # Only letters
-    tokens = re.findall(r'\b[a-z]+\b', text)
-    return " ".join(tokens)
 
 def get_recommendations(artist, song, lyrics_data, tfidf_matrix, top_n=5):
     try:
-        # 1. Search in the list (search without Pandas)
+        # 1. Search in the metadata list
         target_index = -1
         song_entry = None
         
@@ -47,38 +33,44 @@ def get_recommendations(artist, song, lyrics_data, tfidf_matrix, top_n=5):
         if target_index == -1:
             return {"error": f"Sorry, the song '{artist} - {song}' was not found in the database."}
 
-        # 2. Extract data
+        # 2. Data extraction
         target_emotion_label = song_entry['emotion_label']
         target_emotion_name = song_entry['emotion_name']
         
-        # 3. Calculate similarity
-        # Extract the corresponding row from the matrix
+        # 3. Similarity calculation (without Scikit-learn)
+        # Mathematics: Cosine Similarity = (A . B) / (|A|*|B|)
+        # Since our TF-IDF matrix is already normalized (L2 norm), simple multiplication (Dot Product) is sufficient.
+        # Extract the vector of the target song (this is a sparse vector)
         song_vector = tfidf_matrix[target_index]
-        # Calculate similarity with ALL songs
-        sim_scores = cosine_similarity(song_vector, tfidf_matrix)[0]
         
-        # 4. Manual filtering and sorting
-        # Build a list: (index, score), but only for those with matching emotions
+        # Matrix multiplication: The entire matrix multiplied by the transpose of the song vector
+        # Result: A column vector containing similarity scores for all songs
+        # The .dot() is a built-in fast function of the scipy sparse matrix
+        dot_product = tfidf_matrix.dot(song_vector.T)
+        
+        # Conversion to dense array and flattening to 1D
+        sim_scores = dot_product.toarray().flatten()
+        
+        # 4. Filtering and sorting
         candidates = []
         for i, score in enumerate(sim_scores):
-            if i == target_index: continue # We skip ourselves
+            if i == target_index: continue # Skip itself
             
-            # We only add it if the emotion matches
             if lyrics_data[i]['emotion_label'] == target_emotion_label:
                 candidates.append((i, score))
         
-        # Sort by score (descending)
+        # Sorting by score (descending order)
         candidates.sort(key=lambda x: x[1], reverse=True)
         
-        # Select Top N
+        # Top N selection
         top_candidates = candidates[:top_n]
         
-        # Format results
+        # Result formatting
         recommendations = []
         for idx, score in top_candidates:
             rec_item = lyrics_data[idx].copy()
-            rec_item['similarity'] = score
-            recommendations.append (rec_item)
+            rec_item['similarity'] = float(score) # float conversion for JSON compatibility
+            recommendations.append(rec_item)
 
         return {
             "error": None,
@@ -96,31 +88,22 @@ def get_recommendations(artist, song, lyrics_data, tfidf_matrix, top_n=5):
 
 
 def load_artifacts():
-    print("\nLoading pre-trained models and processed data...")
+    print("\nLoading processed data (Lightweight Mode)...")
     start_time = time.time()
     
     try:
-        # 1. Load metadata from JSON
+        # 1. Metadata loading from JSON
         with gzip.open(LYRICS_METADATA_PATH, "rt", encoding="utf-8") as f:
             lyrics_data = json.load(f)
 
-        # 2. Load matrix
+        # 2. Matrix loading (Scipy sparse)
         tfidf_matrix = load_npz(LYRICS_MATRIX_PATH)
-        try:
-            emotion_model = joblib.load(EMOTION_MODEL_PATH)
-            tfidf_vectorizer = joblib.load(LYRICS_VECTORIZER_PATH)
-        except:
-            print("Warning: Could not load emotion models. Search will work, but new text classification won't.")
-            emotion_model = None
-            tfidf_vectorizer = None
-
+        
         print(f"Artifacts loaded successfully. Duration: {time.time() - start_time:.2f} sec.")
         
         return {
-            "emotion_model": emotion_model,
             "lyrics_df": lyrics_data,
-            "tfidf_matrix": tfidf_matrix,
-            "tfidf_vectorizer": tfidf_vectorizer
+            "tfidf_matrix": tfidf_matrix
         }
     except Exception as e:
         print(f"Error loading files: {e}.")
@@ -128,15 +111,13 @@ def load_artifacts():
 
 def initialize_app(force_regenerate=False):
     if force_regenerate:
-        print("Warning: Regeneration is not supported in this optimization mode.")
-    
+        print("Warning: Regeneration is not supported in Vercel/Lightweight mode.")
     return load_artifacts()
 
-# The CLI part can remain for testing
 def main_cli():
     artifacts = load_artifacts()
     if artifacts:
-        print("System loaded. Ready for queries.")
+        print("System loaded. Ready.")
     else:
         print("Failed to load system.")
 
